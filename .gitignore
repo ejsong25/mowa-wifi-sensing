@@ -159,6 +159,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-server/checkpoint/
+# server/checkpoint/
 .DS_Store
 server/wandb/
