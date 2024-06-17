@@ -1,11 +1,11 @@
 # GPU config
 GPU : 
-  cuda: True
+  cuda: False
   gpu_ids: [0]  # set the GPU ids to use, e.g. [0] or [1, 2]
 
 # SVL parameters
 SVL : 
-  dataset : 
+  dataset :   
     dataset_path: ./csi_dataset/domain_A
     activity_labels: ['empty', 'sit', 'stand', 'walk', 'fall']
     window_size: 10
@@ -74,12 +74,12 @@ subcarrier :
 application :
   # Server
   server : 
-    ip: 'xxx.xxx.xxx.xxx'
+    ip: '172.16.231.242'
     port: 1111
 
   # Client
   client  :
-    mac : 'b4b024d555e7'
+    mac : 'b827eb471d2f'
     window_size: 10
     bandwidth : 20MHz
     activity_labels: ['empty', 'sit', 'stand', 'walk', 'fall']

@@ -5,7 +5,7 @@ import torch.utils.data as DATA
 import torch.nn.functional as F
 import numpy as np
 from dataloader.dataset import FSLDataset
-from runner.utils import torch_seed, get_config,extract_test_sample
+from runner.utils import torch_seed, get_config, extract_test_sample
 import runner.proto as proto
 from tqdm import tqdm
 
@@ -13,8 +13,8 @@ from tqdm import tqdm
 class Tester_FSL:
     def __init__(self, config):
         self.config = get_config(config)
-        self.use_cuda = self.config['GPU']['cuda']
-        self.device_ids = self.config['GPU']['gpu_ids']
+        # self.use_cuda = self.config['GPU']['cuda']
+        # self.device_ids = self.config['GPU']['gpu_ids']
         self.win_size = self.config['FSL']['dataset']['window_size']
 
         self.net = proto.load_protonet_vit(
@@ -34,13 +34,13 @@ class Tester_FSL:
         self.support = self.config['FSL']['test']['n_support']
         self.query = self.config['FSL']['test']['n_query']
 
-        if self.use_cuda:
-            self.net.to(self.device_ids[0])
+        # if self.use_cuda:
+        #     self.net.to(self.device_ids[0])
 
     def test(self):
         torch_seed(40)
-        print("Cuda: ", torch.cuda.is_available())
-        print("Device id: ", self.device_ids[0])
+        # print("Cuda: ", torch.cuda.is_available())
+        # print("Device id: ", self.device_ids[0])
 
         print(f"Load Test Dataset.. # window_size:{self.win_size}")
         test_data = FSLDataset(self.config['FSL']['dataset']['test_dataset_path'],
@@ -82,8 +82,6 @@ class Tester_FSL:
         print(conf_mat)
         if total_count == 0:
             avg_acc = 0
-        else :
+        else:
             avg_acc = running_acc / total_count
         print('Test results -- Acc: {:.5f}'.format(avg_acc))
-
-

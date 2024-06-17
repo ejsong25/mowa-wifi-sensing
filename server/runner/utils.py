@@ -40,6 +40,18 @@ def euclidean_dist(x, y):
 def extract_train_sample(n_way, n_support, n_query, datax, datay):
 
     """
+    train : 
+    epoch: 50
+    epoch_size: 500
+    lr: 0.0001 
+    step_size : 10
+    gamma : 0.9
+
+    n_way : 4
+    n_support :  30
+    n_query :  10
+    save_path: ./checkpoint/few_vit
+    ===================================
     Picks random sample of size n_support+n_querry, for n_way classes
     Args:
         n_way (int): number of classes in a classification task

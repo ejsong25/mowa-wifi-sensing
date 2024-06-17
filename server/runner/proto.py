@@ -7,7 +7,6 @@ from model.vit import ViT
 
 from runner.utils import euclidean_dist
 
-
 class ProtoNet(nn.Module):
     def __init__(self, encoder):
         """
@@ -18,7 +17,8 @@ class ProtoNet(nn.Module):
             n_query (int): number of labeled examples per class in the query set
         """
         super(ProtoNet, self).__init__()
-        self.encoder = encoder.cuda(0)
+        # self.encoder = encoder.cuda(0)
+        self.encoder = encoder
 
     def proto_train(self, sample):
         
@@ -30,7 +30,8 @@ class ProtoNet(nn.Module):
                 torch.Tensor: shape(2), loss, accuracy and y_hat
         """
 
-        sample_images = sample['csi_mats'].cuda(0)
+        # sample_images = sample['csi_mats'].cuda(0)
+        sample_images = sample['csi_mats']
         n_way = sample['n_way']
         n_support = sample['n_support']
         n_query = sample['n_query']
@@ -41,7 +42,8 @@ class ProtoNet(nn.Module):
         # target indices are 0 ... n_way-1
         target_inds = torch.arange(0, n_way).view(n_way, 1, 1).expand(n_way, n_query, 1).long()
         target_inds = Variable(target_inds, requires_grad=False)
-        target_inds = target_inds.cuda(0)
+        # target_inds = target_inds.cuda(0)
+        target_inds = target_inds
 
         # encode dataloader dataframes of the support and the query set
         '''
@@ -80,7 +82,8 @@ class ProtoNet(nn.Module):
         Returns:
             torch.Tensor: shape(2), loss, accuracy and y_hat
         """
-        sample_images = support_sample['s_csi_mats'].cuda(0)
+        # sample_images = support_sample['s_csi_mats'].cuda(0)
+        sample_images = support_sample['s_csi_mats']
         n_way = support_sample['n_way']
         n_support = support_sample['n_support']
 
@@ -105,7 +108,8 @@ class ProtoNet(nn.Module):
         return z_proto
 
     def proto_test(self, query_sample, z_proto, n_way, gt):
-        sample_images = query_sample.unsqueeze(0).cuda(0)
+        # sample_images = query_sample.unsqueeze(0).cuda(0)
+        sample_images = query_sample.unsqueeze(0)
         n_query = 1
 
         #gt_mat = torch.tensor([gt] * n_way).cuda(0)

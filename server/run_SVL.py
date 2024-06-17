@@ -23,7 +23,6 @@ window_size = config['application']['client']['window_size']
 num_sub = config['subcarrier'][config['application']['client']["bandwidth"]]
 activities = config['application']['client']["activity_labels"]
 
-
 columns = []
 for i in range(0, num_sub):
     columns.append('_' + str(i))
@@ -46,10 +45,9 @@ model = ViT(
 
 model.load_state_dict(torch.load(config['application']['SVL']['save_model_path']))
 
-if use_cuda:
-    model.to(config['GPU']['gpu_ids'][0])
+# if use_cuda:
+#     model.to(config['GPU']['gpu_ids'][0])
 print('======> Success')
-
 
 mac_dict = {}
 mac_dict[mac] = pd.DataFrame(columns=columns)
@@ -85,8 +83,8 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                     c_data = np.array(mac_dict[mac])
 
                     c_data = torch.from_numpy(c_data).unsqueeze(0).unsqueeze(0).float()
-                    if use_cuda:
-                        c_data = c_data.cuda(0)
+                    # if use_cuda:
+                    #     c_data = c_data.cuda(0)
 
                     pred = model(c_data)
                     print('Predict result: {}'.format(pred))
@@ -97,11 +95,11 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
 
                     P_COUNT = 0
 
-                elif len(mac_dict[mac]) == window_size and P_COUNT == window_size//2:
+                elif len(mac_dict[mac]) == window_size and P_COUNT == window_size // 2:
                     c_data = np.array(mac_dict[mac])
                     c_data = torch.from_numpy(c_data).unsqueeze(0).unsqueeze(0).float()
-                    if use_cuda:
-                        c_data = c_data.cuda(0)
+                    # if use_cuda:
+                    #     c_data = c_data.cuda(0)
 
                     outputs = model(c_data)
                     outputs = F.log_softmax(outputs, dim=1)
@@ -123,8 +121,6 @@ class MyTcpHandler(socketserver.BaseRequestHandler):
                 elif len(mac_dict[mac]) > window_size:
                     print("Error!")
 
-
-
             except Exception as e:
                 print('Error', e)
 
@@ -139,8 +135,6 @@ def runServer(HOST, PORT):
 
     except KeyboardInterrupt:
         print('==== Exit Edge server ====')
-
-
 
 
 if __name__ == '__main__':

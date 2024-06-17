@@ -3,7 +3,6 @@ import tqdm
 import torch
 import torch.nn as nn
 import torch.utils.data as DATA
-import torch.nn.functional as F
 import numpy as np
 from dataloader.dataset import FSLDataset
 from runner.utils import torch_seed, get_config, extract_train_sample
@@ -13,8 +12,8 @@ import runner.proto as proto
 class Trainer_FSL:
     def __init__(self, config):
         self.config = get_config(config)
-        self.use_cuda = self.config['GPU']['cuda']
-        self.device_ids = self.config['GPU']['gpu_ids']
+        # self.use_cuda = self.config['GPU']['cuda']
+        # self.device_ids = self.config['GPU']['gpu_ids']
         self.win_size = self.config['FSL']['dataset']['window_size']
         self.epochs = self.config['FSL']['train']['epoch']
 
@@ -25,8 +24,8 @@ class Trainer_FSL:
             num_layers=self.config["model"]["ViT"]["num_layers"],
             num_heads=self.config["model"]["ViT"]["num_heads"],
             mlp_dim=self.config["model"]["ViT"]["mlp_dim"],
-            # num_classes=len(self.config['FSL']['dataset']["train_activity_labels"]),
-            num_classes=5,
+            num_classes=len(self.config['FSL']['dataset']["train_activity_labels"]),
+            # num_classes=5,
 
             in_size=[self.config['FSL']['dataset']["window_size"], self.config['subcarrier'][self.config['FSL']['dataset']["bandwidth"]]]
         )
@@ -38,14 +37,14 @@ class Trainer_FSL:
         self.support = self.config['FSL']['train']['n_support']
         self.query = self.config['FSL']['train']['n_query']
 
-        if self.use_cuda:
-            self.net.to(self.device_ids[0])
-            self.loss.to(self.device_ids[0])
+        # if self.use_cuda:
+        #     self.net.to(self.device_ids[0])
+        #     self.loss.to(self.device_ids[0])
     
-    def train(self) :
+    def train(self):
         torch_seed(40)
-        print("Cuda: ", torch.cuda.is_available())
-        print("Device id: ", self.device_ids[0])
+        # print("Cuda: ", torch.cuda.is_available())
+        # print("Device id: ", self.device_ids[0])
         print(f"Load Train Dataset.. # window_size:{self.win_size}")
 
         train_data = FSLDataset(self.config['FSL']['dataset']['train_dataset_path'],
@@ -64,7 +63,7 @@ class Trainer_FSL:
         best_model = None
         best_accuracy = 0.0
         
-        for epoch in range(self.epochs) :
+        for epoch in range(self.epochs):
             running_loss = 0.0
             running_acc = 0.0
             
